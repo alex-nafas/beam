@@ -21,8 +21,9 @@ import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.RowWithStorage;
 
-public class JavaPrefix extends PTransform<PCollection<String>, PCollection<String>> {
+public class JavaPrefix extends PTransform<PCollection<RowWithStorage>, PCollection<String>> {
 
   final String prefix;
 
@@ -30,16 +31,16 @@ public class JavaPrefix extends PTransform<PCollection<String>, PCollection<Stri
     this.prefix = prefix;
   }
 
-  class AddPrefixDoFn extends DoFn<String, String> {
+  class AddPrefixDoFn extends DoFn<RowWithStorage, String> {
 
     @ProcessElement
-    public void process(@Element String input, OutputReceiver<String> o) {
-      o.output(prefix + input);
+    public void process(@Element RowWithStorage input, OutputReceiver<String> o) {
+      o.output(prefix + input.getString(0));
     }
   }
 
   @Override
-  public PCollection<String> expand(PCollection<String> input) {
+  public PCollection<String> expand(PCollection<RowWithStorage> input) {
     return input.apply("AddPrefix", ParDo.of(new AddPrefixDoFn()));
   }
 }

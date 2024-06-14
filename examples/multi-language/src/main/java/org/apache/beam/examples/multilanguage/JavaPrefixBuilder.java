@@ -20,13 +20,14 @@ package org.apache.beam.examples.multilanguage;
 import org.apache.beam.sdk.transforms.ExternalTransformBuilder;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.RowWithStorage;
 
 public class JavaPrefixBuilder
     implements ExternalTransformBuilder<
-        JavaPrefixConfiguration, PCollection<String>, PCollection<String>> {
+        JavaPrefixConfiguration, PCollection<RowWithStorage>, PCollection<String>> {
 
   @Override
-  public PTransform<PCollection<String>, PCollection<String>> buildExternal(
+  public PTransform<PCollection<RowWithStorage>, PCollection<String>> buildExternal(
       JavaPrefixConfiguration configuration) {
     return new JavaPrefix(configuration.prefix);
   }
